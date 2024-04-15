@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.GetRecordsMapper">
+	<!-- １件取得 -->
+	<select id="getRecords"
+		parameterType="String"
+		resultType="com.example.demo.entity.GetRecords">
+		SELECT
+			emp.employee_id as employee_id,
+			emp.employee_name as employee_name,
+			emp.age as age,
+			emp.gender as gender,
+			emp.post_no as post_no,
+			emp.address as address,
+			emp.tel as tel,
+			emp.dept_id as dept_id,
+			emp.role_id as role_id,
+			emp.ad_regist_flg as ad_regist_flg,
+			emp.note as note,
+			dep.dept_name as dept_name,
+			rol.role_name as role_name,
+			lang.lang_id as lang_id,
+			lang.lang_name as lang_name
+		FROM
+			demo.employees emp
+		INNER JOIN
+			demo.depts dep
+		ON(
+			emp.dept_id = dep.dept_id
+			AND
+		    dep.delete_flg='0'
+		)
+		INNER JOIN
+			demo.roles rol
+		ON(emp.role_id = rol.role_id)
+		INNER JOIN
+			demo.program_langs lang
+		ON(emp.employee_id = lang.employee_id)
+		WHERE
+			emp.delete_flg = '0'
+		AND
+			emp.employee_id = #{employeeId};
+	</select>
+</mapper>

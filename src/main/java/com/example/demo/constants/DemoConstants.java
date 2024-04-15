@@ -14,5 +14,7 @@ public class DemoConstants {
 	public static final String XML_HTTP_REQUEST = "XMLHttpRequest";
 	/** CORS対策用 */
 	public static final String ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
+	/** レコード取得API名称 */
+	public static final String GET_RECORDS_API_NAME = "レコード取得API";
 	
 }

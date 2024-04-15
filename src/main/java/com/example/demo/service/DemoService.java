@@ -1,8 +1,11 @@
 package com.example.demo.service;
 
 import java.io.IOException;
+import java.util.List;
 
 import com.example.demo.dto.ErrDto;
+import com.example.demo.dto.GetRecordsDto;
+import com.example.demo.dto.HttpRequestParamDto;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -24,11 +27,28 @@ public interface DemoService {
 	public ErrDto chkCsrf(HttpServletRequest request);
 
 	/**
-	 * リクエストパラメータチェック.<br/>
+	 * バリデーションチェック.<br/>
 	 * 
 	 * @param request
 	 * @return エラーDTO 
 	 * @throws IOException 
 	 */
-	public ErrDto chkParams(HttpServletRequest request) throws IOException;
+	public ErrDto chkParams(HttpRequestParamDto dto) throws IOException;
+
+	/**
+	 * レコード取得.<br/>
+	 * 
+	 * @param employeeId
+	 * @return 取得レコード格納DTO.
+	 */
+	public List<GetRecordsDto> getRecords(String employeeId);
+	
+	/**
+	 * エラーDTO取得.<br/> 
+	 * @param errCd
+	 * @param errMsgId
+	 * @return エラーDTO
+	 */
+	public ErrDto setErrDto(int errCd, String errMsgId);
+
 }

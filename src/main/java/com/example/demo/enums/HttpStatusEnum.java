@@ -9,8 +9,8 @@ package com.example.demo.enums;
  */
 public enum HttpStatusEnum {
 	SUCCESS_STATUS(200, 0, "info.demo.getrecords.success"),
-	CSRF_ERR_STATUS(403, 1003, "err.demo.csrf.chk.err"),
-	VALID_ERR_STATUS(406, 1004, "err.demo.valid.chk.err"),
+	CSRF_ERR_STATUS(403, 1002, "err.demo.csrf.chk.err"),
+	VALID_ERR_STATUS(406, 1003, "err.demo.valid.chk.err"),
 	SYS_ERR_STATUS(500, 1005, "err.demo.sys.err");
 	
 	private final int httpStatus;

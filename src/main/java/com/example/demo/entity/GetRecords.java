@@ -1,12 +1,10 @@
-package com.example.demo.dto;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
+package com.example.demo.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * レコード取得APIの結果格納用DTO.<br/>
+ * レコード取得APIの結果格納用Entity.<br/>
  * 
  * @author iwamura.sou
  * @since 2024/04/15
@@ -14,8 +12,7 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class GetRecordsDto {
+public class GetRecords {
 	/** 社員ID */
 	private String employeeId;
 	/** 社員氏名 */

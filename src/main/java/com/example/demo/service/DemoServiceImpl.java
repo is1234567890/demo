@@ -1,23 +1,29 @@
 package com.example.demo.service;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.SmartValidator;
 
 import com.example.demo.constants.DemoConstants;
 import com.example.demo.dto.ErrDto;
+import com.example.demo.dto.ErrListDto;
 import com.example.demo.dto.GetRecordsDto;
+import com.example.demo.dto.HttpRequestParamDto;
+import com.example.demo.entity.GetRecords;
 import com.example.demo.enums.HttpStatusEnum;
+import com.example.demo.repository.GetRecordsRepository;
 import com.example.demo.util.DemoLogger;
 import com.example.demo.util.DemoUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -34,101 +40,143 @@ public class DemoServiceImpl implements DemoService {
 	// DI系
 	@Autowired
 	private SmartValidator smartValidator;
-	
+	@Autowired
+	private GetRecordsRepository rep;
+
 	/** ログ */
 	private DemoLogger log = new DemoLogger(DemoService.class);
-	
-	// 定数
-	/** API名 */
-	private final String GET_RECORDS_API_NAME = "レコード取得API";
+	private Logger validLogger = LoggerFactory.getLogger(DemoService.class);
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public ErrDto chkCsrf(HttpServletRequest request) {
+		
+		ErrDto errDto = null;
+		
 		String xRequestedWith = request
 				.getHeader(DemoConstants.X_REQUESTED_WITH);
-
+		
 		if (!DemoConstants.XML_HTTP_REQUEST.equals(xRequestedWith)) {
 			HttpStatusEnum csrfErrEnum = HttpStatusEnum.CSRF_ERR_STATUS;
-			log.error(csrfErrEnum.getErrMsgId(), new String[] {GET_RECORDS_API_NAME});
-			
-			ErrDto errDto = setErrDto(csrfErrEnum.getErrCd(), csrfErrEnum.getErrMsgId());
+			log.error(csrfErrEnum.getErrMsgId(),
+					new String[] { DemoConstants.GET_RECORDS_API_NAME });
+
+			errDto = setErrDto(csrfErrEnum.getErrCd(),
+					csrfErrEnum.getErrMsgId());
 			return errDto;
 		}
 
-		return null;
+		return errDto;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ErrDto chkParams(HttpServletRequest request) throws IOException {
+	public ErrDto chkParams(HttpRequestParamDto paramDto) {
 
-		ErrDto errDto = new ErrDto();
+		ErrDto errDto = null;
 
-		try {
-			// パラメータ取得
-			String json = getJsonData(request);
-			ObjectMapper mapper = new ObjectMapper();
-			GetRecordsDto dto = mapper.readValue(json, GetRecordsDto.class);
+		errDto = validDto(paramDto);
 
-			// パラメータチェック
-			errDto = validDto(dto);
-
-		} catch (Exception e) {
-			HttpStatusEnum validErrEnum = HttpStatusEnum.VALID_ERR_STATUS;
-			log.error(validErrEnum.getErrMsgId(), e, GET_RECORDS_API_NAME);
-			
-			errDto = setErrDto(validErrEnum.getErrCd(),
-					validErrEnum.getErrMsgId());
-
-			return errDto;
-		}
-
-		return null;
+		return errDto;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<GetRecordsDto> getRecords(String employeeId) throws DataAccessException {
+
+		List<GetRecords> entityList = rep.getRecords(employeeId);
+		List<GetRecordsDto> dtoList = new ArrayList<GetRecordsDto>();
+		
+		ModelMapper mapper = new ModelMapper();
+		for(GetRecords entity : entityList) {
+			dtoList.add(mapper.map(entity, GetRecordsDto.class));
+		}
+		
+		return dtoList;
+	}
+	
 	/**
 	 * バリデーションチェック用.<br/>
 	 * 
 	 * @param dto
 	 * @return errDto
 	 */
-	private ErrDto validDto(GetRecordsDto dto) {
-		
-		ErrDto errDto = new ErrDto();
+	private ErrDto validDto(HttpRequestParamDto dto) {
+
+		ErrDto errDto = null;
 		
 		BindingResult result = new DataBinder(dto).getBindingResult();
 		smartValidator.validate(dto, result);
-		if(result.hasErrors()) {
+		if (result.hasErrors()) {
+			HttpStatusEnum validErrEnum = HttpStatusEnum.VALID_ERR_STATUS;
+			errDto = setErrDto(validErrEnum.getErrCd(),
+					validErrEnum.getErrMsgId());
+			
+			List<ErrListDto> errList = setErrListDto(result);
+			errDto.setErrList(errList);
 			
 		}
-		
-		return null;
+
+		return errDto;
 	}
 
 	/**
-	 * Jsonデータ取得.<br/>
+	 * エラーリストのセット.<br/>
 	 * 
-	 * @param request
-	 * @return json
-	 * @throws IOException
+	 * @param result
+	 * @return errList
 	 */
-	private String getJsonData(HttpServletRequest request) throws IOException {
-
-		BufferedReader reader = request.getReader();
-
-		Stream<String> stream = reader.lines();
-		Iterator<String> it = stream.iterator();
-		StringBuilder sb = new StringBuilder();
-		while (it.hasNext()) {
-			sb.append(it.next());
+	private List<ErrListDto> setErrListDto(BindingResult result) {
+		
+		List<ErrListDto> errList = new ArrayList<ErrListDto>();
+		List<FieldError> fieldErrors = result.getFieldErrors();
+		for(FieldError fieldError : fieldErrors) {
+			validLogger.error(fieldError.getDefaultMessage(), fieldError.getField());
+			
+			ErrListDto errListDto = new ErrListDto();
+			errListDto.setErrItem(fieldError.getField());
+			
+			int errType = getErrType(fieldError);
+			errListDto.setErrType(errType);
+			
+			errList.add(errListDto);
 		}
+		
+		return errList;
+	}
 
-		return sb.toString();
+	/**
+	 * エラー種別取得.<br/>
+	 * 
+	 * @param fieldError
+	 * @return errType
+	 */
+	private int getErrType(FieldError fieldError) {
+		int errType = 0;
+		
+		String code = fieldError.getCode();
+		switch(code) {
+		case "NotBlank":
+			errType = 1;
+			break;
+		case "Size":
+			errType = 2;
+			break;
+		case "Pattern":
+			errType = 3;
+			break;
+		default:
+			errType = 99;
+			break;
+		}
+		
+		return errType;
 	}
 
 	/**
@@ -138,12 +186,12 @@ public class DemoServiceImpl implements DemoService {
 	 * @param errMsgId
 	 * @return errDto
 	 */
-	private ErrDto setErrDto(int errCd, String errMsgId) {
+	public ErrDto setErrDto(int errCd, String errMsgId) {
 
 		ErrDto errDto = new ErrDto();
 		errDto.setErrCd(errCd);
 
-		String errMsg = DemoUtil.getMsg(errMsgId, GET_RECORDS_API_NAME);
+		String errMsg = DemoUtil.getMsg(errMsgId, DemoConstants.GET_RECORDS_API_NAME);
 		errDto.setErrMsg(errMsg);
 
 		return errDto;
