@@ -55,7 +55,7 @@ public class DemoController {
 	 * @throws IOException 
 	 */
 	@GetMapping("/get/records")
-	@CrossOrigin("http://localhost:80")
+	@CrossOrigin("http://localhost:8081")
 	public void getRecords(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 		
