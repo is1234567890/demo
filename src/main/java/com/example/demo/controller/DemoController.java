@@ -106,7 +106,7 @@ public class DemoController {
 			errDto = service.setErrDto(sysErrEnum.getErrCd(), sysErrEnum.getErrMsgId());
 			
 			response.setStatus(sysErrEnum.getHttpStatus());
-			response =setErrResponse(response, errDto);
+			response = setErrResponse(response, errDto);
 			
 			log.error(sysErrEnum.getErrMsgId(), e, DemoConstants.GET_RECORDS_API_NAME);
 			
