@@ -9,7 +9,7 @@ import com.example.demo.entity.GetRecords;
 /**
  * レコード取得API用Mapper.<br/>
  * 
- * @author iwamura.sou
+ * @author SI
  * @since 2024/04/15
  * @version 1.0
  */

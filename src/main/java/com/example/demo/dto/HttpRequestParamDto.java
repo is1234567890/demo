@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 /**
  * レコード取得DTO.<br/>
  * 
- * @author iwamura.sou
+ * @author SI
  * @since 2024/04/14
  * @version 1.0
  */

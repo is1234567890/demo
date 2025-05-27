@@ -3,7 +3,7 @@ package com.example.demo.constants;
 /**
  * 定数クラス.<br/>
  * 
- * @author iwamura.sou
+ * @author SI
  * @since 2024/04/13
  * @version 1.0
  */

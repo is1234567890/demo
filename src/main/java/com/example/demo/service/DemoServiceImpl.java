@@ -30,7 +30,7 @@ import jakarta.servlet.http.HttpServletRequest;
 /**
  * DemoアプリケーションService実装クラス.<br/>
  * 
- * @author iwamura.sou
+ * @author SI
  * @since 2024/04/13
  * @version 1.0
  */

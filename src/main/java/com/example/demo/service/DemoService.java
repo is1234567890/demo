@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 /**
  * Demoアプリケーション用service.<br/>
  * 
- * @author iwamura.sou
+ * @author SI
  * @since 2024/04/13
  * @version 1.0
  */

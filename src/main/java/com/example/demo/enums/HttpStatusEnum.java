@@ -3,7 +3,7 @@ package com.example.demo.enums;
 /**
  * Httpステータス用Enum.<br/>
  * 
- * @author iwamura.sou
+ * @author SI
  * @since 2024/04/13
  * @version 1.0
  */
