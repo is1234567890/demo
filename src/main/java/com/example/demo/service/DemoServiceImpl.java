@@ -60,6 +60,7 @@ public class DemoServiceImpl implements DemoService {
 		
 		if (!DemoConstants.XML_HTTP_REQUEST.equals(xRequestedWith)) {
 			HttpStatusEnum csrfErrEnum = HttpStatusEnum.CSRF_ERR_STATUS;
+			
 			log.error(csrfErrEnum.getErrMsgId(),
 					new String[] { DemoConstants.GET_RECORDS_API_NAME });
 
