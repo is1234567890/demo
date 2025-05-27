@@ -6,7 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
+ * エラーリスト.<br/>
  * 
+ * @author SI
+ * @since 2024/04/13
+ * @version 1.0
  */
 @Data
 @NoArgsConstructor

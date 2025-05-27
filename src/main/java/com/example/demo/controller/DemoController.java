@@ -30,7 +30,7 @@ import jakarta.servlet.http.HttpServletResponse;
 /**
  * コントローラークラス.<br/>
  * 
- * @author iwamura.sou
+ * @author SI
  * @since 2024/04/13
  * @version 1.0
  */
@@ -55,7 +55,7 @@ public class DemoController {
 	 * @throws IOException 
 	 */
 	@GetMapping("/get/records")
-	@CrossOrigin("http://localhost:80")
+	@CrossOrigin("http://localhost:8081")
 	public void getRecords(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 		
@@ -106,7 +106,7 @@ public class DemoController {
 			errDto = service.setErrDto(sysErrEnum.getErrCd(), sysErrEnum.getErrMsgId());
 			
 			response.setStatus(sysErrEnum.getHttpStatus());
-			response =setErrResponse(response, errDto);
+			response = setErrResponse(response, errDto);
 			
 			log.error(sysErrEnum.getErrMsgId(), e, DemoConstants.GET_RECORDS_API_NAME);
 			

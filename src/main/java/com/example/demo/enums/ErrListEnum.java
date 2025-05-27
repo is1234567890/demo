@@ -3,7 +3,7 @@ package com.example.demo.enums;
 /**
  * バリデーションチェックのエラーリスト用Enum.<br/>
  * 
- * @author sou.iwamura
+ * @author SI
  * @since 2024/04/15
  * @version 1.0
  */

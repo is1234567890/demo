@@ -11,7 +11,7 @@ import com.example.demo.mapper.GetRecordsMapper;
 /**
  * レコード取得API用Repository.<br/>
  * 
- * @author iwamura.sou
+ * @author SI
  * @since 2024/04/15
  * @version 1.0
  */

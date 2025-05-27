@@ -30,7 +30,7 @@ import jakarta.servlet.http.HttpServletRequest;
 /**
  * DemoアプリケーションService実装クラス.<br/>
  * 
- * @author iwamura.sou
+ * @author SI
  * @since 2024/04/13
  * @version 1.0
  */
@@ -60,6 +60,7 @@ public class DemoServiceImpl implements DemoService {
 		
 		if (!DemoConstants.XML_HTTP_REQUEST.equals(xRequestedWith)) {
 			HttpStatusEnum csrfErrEnum = HttpStatusEnum.CSRF_ERR_STATUS;
+			
 			log.error(csrfErrEnum.getErrMsgId(),
 					new String[] { DemoConstants.GET_RECORDS_API_NAME });
 

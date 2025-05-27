@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 /**
  * レコード取得APIの結果格納用DTO.<br/>
  * 
- * @author iwamura.sou
+ * @author SI
  * @since 2024/04/15
  * @version 1.0
  */

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
  * エラーDTO.<br/>
  * 注意）lombok.jarをサイトからインストールしないと使えないwwwww
  * 
- * @author iwamura.sou
+ * @author SI
  * @since 2024/04/13
  * @version 1.0
  */
